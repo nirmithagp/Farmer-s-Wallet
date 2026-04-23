@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Comprehensive agricultural finance platform for farmers - Crop planning, expense tracking, market forecasting, and loan recommendations">
+    <title>Farmers Wallet - AI Powered Financial Advisor</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-logo">
+                    <span class="nav-logo-icon">🌾</span>
+                    <span>Farmers Wallet</span>
+                </a>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li class="lang-selector">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">English</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </li>
+                </ul>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title" data-en="AI Powered Financial Advisor"
+                    data-hi="कृत्रिम बुद्धिमत्ता संचालित वित्तीय सलाहकार"
+                    data-kn="ಆರ್ಟಿಫಿಶಿಯಲ್ ಇಂಟೆಲಿಜೆನ್ಸ್ ಚಾಲಿತ ಆರ್ಥಿಕ ಸಲಹೆದಾತ"
+                    data-ta="செயற்கை அறிவுத்திறன் இயக்கிய நிதி ஆலோசक" data-te="AI ఆధారిత ఆర్థిక సలహాదారు"
+                    data-ml="AI അധിഷ്ഠിത സാമ്പത്തിക ഉപദേഷ്ടാവ്">
+                    AI Powered Financial Advisor
+                </h1>
+                <p class="hero-subtitle"
+                    data-en="Empowering agriculture with AI-driven insights, expense tracking, market forecasting, and personalized financial advice"
+                    data-hi="एआई-संचालित अंतर्दृष्टि, व्यय ट्रैकिंग, बाजार पूर्वानुमान और व्यक्तिगत वित्तीय सलाह के साथ कृषि को सशक्त बनाना"
+                    data-kn="AI-ಚಾಲಿತ ಒಳನೋಟಗಳು, ವೆಚ್ಚ ಟ್ರ್ಯಾಕಿಂಗ್, ಮಾರುಕಟ್ಟೆ ಮುನ್ಸೂಚನೆ ಮತ್ತು ವೈಯಕ್ತಿಕ ಹಣಕಾಸು ಸಲಹೆಯೊಂದಿಗೆ ಕೃಷಿಯನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು"
+                    data-ta="AI-இயக்கப்படும் நுண்ணறிவுகள், செலவு கண்காணிப்பு, சந்தை முன்னறிவிப்பு மற்றும் தனிப்பயனாக்கப்பட்ட நிதி ஆலோசனையுடன் விவசாயத்தை மேம்படுத்துதல்"
+                    data-te="AI-ఆధారిత అంతర్దృష్టులు, ఖర్చు ట్రాకింగ్, మార్కెట్ అంచనా మరియు వ్యక్తిగతీకరించిన ఆర్థిక సలహాలతో వ్యవసాయాన్ని శక్తివంతం చేయడం"
+                    data-ml="AI-അധിഷ്ഠിത ഉൾക്കാഴ്ചകൾ, ചെലവ് ട്രാക്കിംഗ്, വിപണി പ്രവചനം, വ്യക്തിഗത സാമ്പത്തിക ഉപദേശം എന്നിവ ഉപയോഗിച്ച് കൃഷിയെ ശാക്തീകരിക്കുന്നു">
+                    Empowering agriculture with AI-driven insights, expense tracking, market forecasting, and
+                    personalized financial advice
+                </p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" onclick="scrollToFeatures()">
+                        <i class="fas fa-rocket"></i>
+                        <span data-en="Get Started" data-hi="शुरू करें" data-kn="ಪ್ರಾರಂಭಿಸಿ" data-ta="தொடங்குங்கள்"
+                            data-te="ప్రారంభించండి" data-ml="തുടങ്ങുക">Get Started</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="learnMore()">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-en="Learn More" data-hi="और जानें" data-kn="ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ" data-ta="மேலும் அறிக"
+                            data-te="మరింత తెలుసుకోండి" data-ml="കൂടുതലറിയുക">Learn More</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title" data-en="Our Features" data-hi="हमारी विशेषताएं" data-kn="ನಮ್ಮ ವೈಶಿಷ್ಟ್ಯಗಳು"
+                data-ta="எங்கள் அம்சங்கள்" data-te="మా ఫీచర్లు" data-ml="ഞങ്ങളുടെ സവിശേഷതകൾ">
+                Our Features
+            </h2>
+
+            <div class="features-grid">
+                <!-- Feature 1: Crop Planning & Financial Advice -->
+                <div class="card float-animation" style="animation-delay: 0s;">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3 class="card-title" data-en="Crop Planning & Financial Advice"
+                            data-hi="फसल योजना और वित्तीय सलाह" data-kn="ಬೆಳೆ ಯೋಜನೆ ಮತ್ತು ಹಣಕಾಸು ಸಲಹೆ"
+                            data-ta="பயிர் திட்டமிடல் & நிதி ஆலோசனை" data-te="పంట ప్రణాళిక & ఆర్థిక సలహా"
+                            data-ml="വിള ആസൂത്രണവും സാമ്പത്തിക ഉപദേശവും">
+                            Crop Planning & Financial Advice
+                        </h3>
+                        <p class="card-description"
+                            data-en="Get personalized investment strategies, profitability forecasts, and crop rotation suggestions based on your risk profile and financial goals."
+                            data-hi="अपनी जोखिम प्रोफ़ाइल और वित्तीय लक्ष्यों के आधार पर व्यक्तिगत निवेश रणनीतियाँ, लाभप्रदता पूर्वानुमान और फसल चक्र सुझाव प्राप्त करें।"
+                            data-kn="ನಿಮ್ಮ ಅಪಾಯ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಹಣಕಾಸು ಗುರಿಗಳ ಆಧಾರದ ಮೇಲೆ ವೈಯಕ್ತಿಕ ಹೂಡಿಕೆ ತಂತ್ರಗಳು, ಲಾಭದಾಯಕತೆ ಮುನ್ಸೂಚನೆಗಳು ಮತ್ತು ಬೆಳೆ ಸರದಿ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ."
+                            data-ta="உங்கள் இடர் சுயவிவரம் மற்றும் நிதி இலக்குகளின் அடிப்படையில் தனிப்பயனாக்கப்பட்ட முதலீட்டு உத்திகள், லாபத்திறன் முன்னறிவிப்புகள் மற்றும் பயிர் சுழற்சி பரிந்துரைகளைப் பெறுங்கள்."
+                            data-te="మీ రిസ്క్ ప్రొఫైల్ మరియు ఆర్థిక లక్ష్యాల ఆధారంగా వ్యక్తిగతీకరించిన పెట్టుబడి వ్యూహాలు, లాభదాయకత అంచనాలు మరియు పంట మార్పిడి సూచనలను పొందండి."
+                            data-ml="നിങ്ങളുടെ റിസ്ക് പ്രൊഫൈലും സാമ്പത്തിക ലക്ഷ്യങ്ങളും അടിസ്ഥാനമാക്കി വ്യക്തിഗത നിക്ഷേപ തന്ത്രങ്ങൾ, ലാഭക്ഷമത പ്രവചനങ്ങൾ, വിള ഭ്രമണ നിർദ്ദേശങ്ങൾ എന്നിവ നേടുക.">
+                            Get personalized investment strategies, profitability forecasts, and crop rotation
+                            suggestions based on your risk profile and financial goals.
+                        </p>
+                        <a href="/financial-advice" class="btn btn-outline">
+                            <i class="fas fa-arrow-right"></i>
+                            <span data-en="Explore" data-hi="अन्वेषण करें" data-kn="ಅನ್ವೇಷಿಸಿ"
+                                data-ta="ஆராயுங்கள்">Explore</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Expense Tracking & Budgeting -->
+                <div class="card float-animation" style="animation-delay: 0.2s;">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <h3 class="card-title" data-en="Expense Tracking & Budgeting" data-hi="व्यय ट्रैकिंग और बजट"
+                            data-kn="ವೆಚ್ಚ ಟ್ರ್ಯಾಕಿಂಗ್ ಮತ್ತು ಬಜೆಟ್" data-ta="செலவு கண்காணிப்பு & பட்ஜெட்"
+                            data-te="ఖర్చు ట్రాకింగ్ & బడ్జెటింగ్" data-ml="ചെലവ് ട്രാക്കിംഗും ബജറ്റിംഗും">
+                            Expense Tracking & Budgeting
+                        </h3>
+                        <p class="card-description"
+                            data-en="Track daily and monthly farming costs, manage budgets, and get insights into spending patterns with visual analytics."
+                            data-hi="दैनिक और मासिक कृषि लागत को ट्रैक करें, बजट प्रबंधित करें, और दृश्य विश्लेषण के साथ खर्च पैटर्न में अंतर्दृष्टि प्राप्त करें।"
+                            data-kn="ದೈನಂದಿನ ಮತ್ತು ಮಾಸಿಕ ಕೃಷಿ ವೆಚ್ಚಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ, ಬಜೆಟ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ ಮತ್ತು ದೃಶ್ಯ ವಿಶ್ಲೇಷಣೆಯೊಂದಿಗೆ ಖರ್ಚು ಮಾದರಿಗಳಲ್ಲಿ ಒಳನೋಟಗಳನ್ನು ಪಡೆಯಿರಿ."
+                            data-ta="தினசரி மற்றும் மாதாந்திர விவசாய செலவுகளைக் கண்காணிக்கவும், பட்ஜெட்டுகளை நிர்வகிக்கவும், காட்சி பகுப்பாய்வுடன் செலவு முறைகளில் நுண்ணறிவுகளைப் பெறவும்."
+                            data-te="రోజువారీ మరియు నెలవారీ వ్యవసాయ ఖర్చులను ట్రాక్ చేయండి, బడ్జెట్‌లను నిర్వహించండి మరియు విజువల్ అనలిటిక్స్‌తో ఖర్చు విధానాలపై అంతర్దృష్టులను పొందండి."
+                            data-ml="ദിവസേനയുള്ളതും പ്രതിമാസവുമായ കാർഷിക ചെലവുകൾ ട്രാക്കുചെയ്യുക, ബജറ്റുകൾ നിയന്ത്രിക്കുക, വിഷ്വൽ അനലിറ്റിക്സ് ഉപയോഗിച്ച് ചെലവ് രീതികളെക്കുറിച്ചുള്ള ഉൾക്കാഴ്ചകൾ നേടുക.">
+                            Track daily and monthly farming costs, manage budgets, and get insights into spending
+                            patterns with visual analytics.
+                        </p>
+                        <a href="/expense-form" class="btn btn-outline">
+                            <i class="fas fa-arrow-right"></i>
+                            <span data-en="Explore" data-hi="अन्वेषण करें" data-kn="ಅನ್ವೇಷಿಸಿ"
+                                data-ta="ஆராயுங்கள்">Explore</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Market Price Forecasting -->
+                <div class="card float-animation" style="animation-delay: 0.4s;">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="card-title" data-en="Market Price Forecasting" data-hi="बाजार मूल्य पूर्वानुमान"
+                            data-kn="ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಮುನ್ಸೂಚನೆ" data-ta="சந்தை விலை முன்னறிவிப்பு"
+                            data-te="మార్కెట్ ధర అంచనా" data-ml="വിപണി വില പ്രവചനം">
+                            Market Price Forecasting
+                        </h3>
+                        <p class="card-description"
+                            data-en="AI-powered price predictions for major crops including wheat, cotton, sugarcane, jowar, and bajara based on market trends and weather data."
+                            data-hi="बाजार के रुझान और मौसम डेटा के आधार पर गेहूं, कपास, गन्ना, ज्वार और बाजरा सहित प्रमुख फसलों के लिए एआई-संचालित मूल्य भविष्यवाणियां।"
+                            data-kn="ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳು ಮತ್ತು ಹವಾಮಾನ ಡೇಟಾದ ಆಧಾರದ ಮೇಲೆ ಗೋಧಿ, ಹತ್ತಿ, ಕಬ್ಬು, ಜೋಳ ಮತ್ತು ಬಜ್ರಾ ಸೇರಿದಂತೆ ಪ್ರಮುಖ ಬೆಳೆಗಳಿಗೆ AI-ಚಾಲಿತ ಬೆಲೆ ಮುನ್ಸೂಚನೆಗಳು."
+                            data-ta="சந்தை போக்குகள் மற்றும் வானிலை தரவுகளின் அடிப்படையில் கோதுமை, பருத்தி, கரும்பு, சோளம் மற்றும் கம்பு உள்ளிட்ட முக்கிய பயிர்களுக்கான AI-இயக்கப்படும் விலை கணிப்புகள்."
+                            data-te="మార్కెట్ పోకడలు మరియు వాతావరణ డేటా ఆధారంగా గోధుమ, పత్తి, చెరకు, జొన్న మరియు సజ్జలు వంటి ప్రధాన పంటలకు AI-ఆధారిత ధర అంచనాలు."
+                            data-ml="വിപണി പ്രവണതകളും കാലാവസ്ഥാ വിവരങ്ങളും അടിസ്ഥാനമാക്കി ഗോതമ്പ്, പരുത്തി, കരിമ്പ്, ചോളം, ബജ്റ എന്നിവയുൾപ്പെടെയുള്ള പ്രധാന വിളകൾക്കുള്ള AI-അധിഷ്ഠിത വില പ്രവചനങ്ങൾ.">
+                            AI-powered price predictions for major crops including wheat, cotton, sugarcane, jowar, and
+                            bajara based on market trends and weather data.
+                        </p>
+                        <a href="/price-form" class="btn btn-outline">
+                            <i class="fas fa-arrow-right"></i>
+                            <span data-en="Explore" data-hi="अन्वेषण करें" data-kn="ಅನ್ವೇಷಿಸಿ"
+                                data-ta="ஆராயுங்கள்">Explore</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature 4: Loan & Subsidy Recommendations -->
+                <div class="card float-animation" style="animation-delay: 0.6s;">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <h3 class="card-title" data-en="Loan & Subsidy Recommendations"
+                            data-hi="ऋण और सब्सिडी सिफारिशें" data-kn="ಸಾಲ ಮತ್ತು ಸಬ್ಸಿಡಿ ಶಿಫಾರಸುಗಳು"
+                            data-ta="கடன் & மானியம் பரிந்துரைகள்" data-te="రుణం & సబ్సిడీ సిఫార్సులు"
+                            data-ml="വായ്പയും സബ്സിഡി ശുപാർശകളും">
+                            Loan & Subsidy Recommendations
+                        </h3>
+                        <p class="card-description"
+                            data-en="Discover government schemes, bank loan offers, and subsidy programs tailored to your farming needs and eligibility."
+                            data-hi="अपनी कृषि आवश्यकताओं और पात्रता के अनुरूप सरकारी योजनाओं, बैंक ऋण प्रस्तावों और सब्सिडी कार्यक्रमों की खोज करें।"
+                            data-kn="ನಿಮ್ಮ ಕೃಷಿ ಅಗತ್ಯಗಳು ಮತ್ತು ಅರ್ಹತೆಗೆ ಅನುಗುಣವಾಗಿ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು, ಬ್ಯಾಂಕ್ ಸಾಲ ಕೊಡುಗೆಗಳು ಮತ್ತು ಸಬ್ಸಿಡಿ ಕಾರ್ಯಕ್ರಮಗಳನ್ನು ಅನ್ವೇಷಿಸಿ."
+                            data-ta="உங்கள் விவசாய தேவைகள் மற்றும் தகுதிக்கு ஏற்ப அரசு திட்டங்கள், வங்கி கடன் சலுகைகள் மற்றும் மானிய திட்டங்களைக் கண்டறியுங்கள்."
+                            data-te="మీ వ్యవసాయ అవసరాలు మరియు అర్హతలకు అనుగుణంగా ప్రభుత్వ పథకాలు, బ్యాంక్ రుణ ఆఫర్లు మరియు సబ్సిడీ ప్రోగ్రామ్‌లను కనుగొనండి."
+                            data-ml="നിങ്ങളുടെ കാർഷിക ആവശ്യങ്ങൾക്കും യോഗ്യതയ്ക്കും അനുസൃതമായി സർക്കാർ പദ്ധതികൾ, ബാങ്ക് വായ്പാ ഓഫറുകൾ, സബ്സിഡി പ്രോഗ്രാമുകൾ എന്നിവ കണ്ടെത്തുക.">
+                            Discover government schemes, bank loan offers, and subsidy programs tailored to your farming
+                            needs and eligibility.
+                        </p>
+                        <a href="/loan-recommendations" class="btn btn-outline">
+                            <i class="fas fa-arrow-right"></i>
+                            <span data-en="Explore" data-hi="अन्वेषण करें" data-kn="ಅನ್ವೇಷಿಸಿ"
+                                data-ta="ஆராயுங்கள்">Explore</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="features-section" id="about">
+        <div class="container container-narrow">
+            <h2 class="section-title" data-en="About Farmers Wallet" data-hi="Farmers Wallet के बारे में"
+                data-kn="Farmers Wallet ಬಗ್ಗೆ" data-ta="Farmers Wallet பற்றி">
+                About Farmers Wallet
+            </h2>
+            <div class="card">
+                <div class="card-content">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary);"
+                        data-en="Farmers Wallet is a comprehensive financial management platform designed specifically for farmers. We combine cutting-edge AI technology with deep agricultural expertise to provide personalized financial advice, market insights, and budget management tools. Our mission is to empower farmers with the financial knowledge and tools they need to maximize profitability and minimize risk."
+                        data-hi="Farmers Wallet एक व्यापक वित्तीय प्रबंधन मंच है जो विशेष रूप से किसानों के लिए डिज़ाइन किया गया है। हम व्यक्तिगत वित्तीय सलाह, बाजार अंतर्दृष्टि और बजट प्रबंधन उपकरण प्रदान करने के लिए अत्याधुनिक एआई तकनीक को गहरी कृषि विशेषज्ञता के साथ जोड़ते हैं। हमारा मिशन किसानों को लाभप्रदता को अधिकतम करने और जोखिम को कम करने के लिए आवश्यक वित्तीय ज्ञान और उपकरणों के साथ सशक्त बनाना है।"
+                        data-kn="Farmers Wallet ಎನ್ನುವುದು ರೈತರಿಗಾಗಿ ವಿಶೇಷವಾಗಿ ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ಸಮಗ್ರ ಹಣಕಾಸು ನಿರ್ವಹಣಾ ವೇದಿಕೆಯಾಗಿದೆ. ವೈಯಕ್ತಿಕ ಹಣಕಾಸು ಸಲಹೆ, ಮಾರುಕಟ್ಟೆ ಒಳನೋಟಗಳು ಮತ್ತು ಬಜೆಟ್ ನಿರ್ವಹಣಾ ಸಾಧನಗಳನ್ನು ಒದಗಿಸಲು ನಾವು ಅತ್ಯಾಧುನಿಕ AI ತಂತ್ರಜ್ಞಾನವನ್ನು ಆಳವಾದ ಕೃಷಿ ಪರಿಣತಿಯೊಂದಿಗೆ ಸಂಯೋಜಿಸುತ್ತೇವೆ. ಲಾಭದಾಯಕತೆಯನ್ನು ಗರಿಷ್ಠಗೊಳಿಸಲು ಮತ್ತು ಅಪಾಯವನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಅಗತ್ಯವಿರುವ ಹಣಕಾಸು ಜ್ಞಾನ ಮತ್ತು ಸಾಧನಗಳೊಂದಿಗೆ ರೈತರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು ನಮ್ಮ ಉದ್ದೇಶವಾಗಿದೆ."
+                        data-ta="Farmers Wallet என்பது விவசாயிகளுக்காக குறிப்பாக வடிவமைக்கப்பட்ட ஒரு விரிவான நிதி மேலாண்மை தளமாகும். தனிப்பயனாக்கப்பட்ட நிதி ஆலோசனை, சந்தை நுண்ணறிவுகள் மற்றும் பட்ஜெட் மேலாண்மை கருவிகளை வழங்க நாங்கள் அதிநவீன AI தொழில்நுட்பத்தை ஆழமான விவசாய நிபுணத்துவத்துடன் இணைக்கிறோம். லாபத்தை அதிகரிக்கவும் இடர்களைக் குறைக்கவும் தேவையான நிதி அறிவு மற்றும் கருவிகளுடன் விவசாயிகளை மேம்படுத்துவதே எங்கள் நோக்கம்.">
+                        Farmers Wallet is a comprehensive financial management platform designed specifically for
+                        farmers. We combine cutting-edge AI technology with deep agricultural expertise to provide
+                        personalized financial advice, market insights, and budget management tools. Our mission is to
+                        empower farmers with the financial knowledge and tools they need to maximize profitability and
+                        minimize risk.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+        style="background: var(--bg-secondary); padding: var(--spacing-xl) 0; margin-top: var(--spacing-2xl); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="container">
+            <div style="text-align: center;">
+                <div class="nav-logo" style="justify-content: center; margin-bottom: var(--spacing-md);">
+                    <span class="nav-logo-icon">🌾</span>
+                    <span>Farmers Wallet</span>
+                </div>
+                <p style="color: var(--text-tertiary); margin-bottom: var(--spacing-md);"
+                    data-en="Empowering farmers with smart financial solutions"
+                    data-hi="स्मार्ट वित्तीय समाधानों के साथ किसानों को सशक्त बनाना"
+                    data-kn="ಸ್ಮಾರ್ಟ್ ಹಣಕಾಸು ಪರಿಹಾರಗಳೊಂದಿಗೆ ರೈತರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು"
+                    data-ta="ஸ்மார்ட் நிதி தீர்வுகளுடன் விவசாயிகளை மேம்படுத்துதல்">
+                    Empowering farmers with smart financial solutions
+                </p>
+                <div style="display: flex; gap: var(--spacing-md); justify-content: center; font-size: 1.5rem;">
+                    <a href="#" style="color: var(--text-secondary); transition: color var(--transition-base);">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" style="color: var(--text-secondary); transition: color var(--transition-base);">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" style="color: var(--text-secondary); transition: color var(--transition-base);">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" style="color: var(--text-secondary); transition: color var(--transition-base);">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <p style="color: var(--text-tertiary); margin-top: var(--spacing-lg); font-size: 0.9rem;">
+                    © 2025 Farmers Wallet. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

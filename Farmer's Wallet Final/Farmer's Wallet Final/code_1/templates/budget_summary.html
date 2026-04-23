@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Summary - Farmers Wallet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .summary-container {
+            max-width: 1000px;
+            margin: var(--spacing-xl) auto;
+        }
+
+        .summary-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin: var(--spacing-xs) 0;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: var(--spacing-sm);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-logo"><span class="nav-logo-icon">🌾</span>Farmers Wallet</a>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/financial-advice" class="nav-link">Financial Advice</a></li>
+                    <li><a href="/expense-form" class="nav-link">Expense Tracking</a></li>
+                    <li><a href="/price-form" class="nav-link">Price Forecast</a></li>
+                    <li><a href="/loan-recommendations" class="nav-link">Loan Recommendations</a></li>
+                    <li class="lang-selector">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">English</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </li>
+                </ul>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container summary-container">
+        <div class="text-center mb-lg">
+            <h1 class="hero-title" data-en="Budget Overview" data-hi="बजट अवलोकन" data-kn="ಬಜೆಟ್ ಅವಲೋಕನ"
+                data-ta="பட்ஜெட் கண்ணோட்டம்" data-te="బడ్జెట్ అవలోకనం" data-ml="ബജറ്റ് അവലോകനം">Budget Overview</h1>
+            <p class="hero-subtitle" data-en="Analyze your spending and manage your budget effectively"
+                data-hi="अपने खर्च का विश्लेषण करें और अपने बजट को प्रभावी ढंग से प्रबंधित करें"
+                data-kn="ನಿಮ್ಮ ಖರ್ಚನ್ನು ವಿಶ್ಲೇಷಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಬಜೆಟ್ ಅನ್ನು ಪರಿಣಾಮಕಾರಿಯಾಗಿ ನಿರ್ವಹಿಸಿ"
+                data-ta="உங்கள் செலவை பகுப்பாய்வு செய்து உங்கள் பட்ஜெட்டை திறம்பட நிர்வகிக்கவும்"
+                data-te="మీ ఖర్చును విశ్లేషించండి మరియు మీ బడ్జెట్‌ను సమర్థవంతంగా నిర్వహించండి"
+                data-ml="നിങ്ങളുടെ ചെലവ് വിശകലനം ചെയ്യുകയും നിങ്ങളുടെ ബജറ്റ് ഫലപ്രദമായി കൈകാര്യം ചെയ്യുകയും ചെയ്യുക">
+                Analyze your spending and manage your budget effectively</p>
+        </div>
+
+        <!-- Budget Setting -->
+        <div class="summary-card">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+                <h3 style="margin:0;" data-en="Monthly Budget" data-hi="मासिक बजट" data-kn="ಮಾಸಿಕ ಬಜೆಟ್"
+                    data-ta="மாதாந்திர பட்ஜெட்" data-te="నెలవారీ బడ్జెట్" data-ml="പ്രതിമാസ ബജറ്റ്"><i
+                        class="fas fa-coins"></i> Monthly Budget</h3>
+                <button id="setBudgetBtn" class="btn btn-outline btn-sm" data-en="Set Budget" data-hi="बजट सेट करें"
+                    data-kn="ಬಜೆಟ್ ಹೊಂದಿಸಿ" data-ta="பட்ஜெட்டை அமைக்கவும்" data-te="బడ్జెట్ సెట్ చేయండి"
+                    data-ml="ബജറ്റ് സജ്ജമാക്കുക">Set Budget</button>
+            </div>
+
+            <div id="budgetInputDiv" style="display: none; margin-bottom: var(--spacing-md);">
+                <div style="display: flex; gap: var(--spacing-sm);">
+                    <input type="number" id="newBudget" class="form-input" placeholder="Enter monthly budget"
+                        data-en="Enter monthly budget" data-hi="मासिक बजट दर्ज करें" data-kn="ಮಾಸಿಕ ಬಜೆಟ್ ನಮೂದಿಸಿ"
+                        data-ta="மாதாந்திர பட்ஜெட்டை உள்ளிடவும்" data-te="నెలవారీ బడ్జెట్‌ను నమోదు చేయండి"
+                        data-ml="പ്രതിമാസ ബജറ്റ് നൽകുക">
+                    <button id="saveBudgetBtn" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="stat-box">
+                    <div class="stat-label" data-en="Total Budget" data-hi="कुल बजट" data-kn="ಒಟ್ಟು ಬಜೆಟ್"
+                        data-ta="மொத்த பட்ஜெட்" data-te="మొత్తం బడ్జెట్" data-ml="ആകെ ബജറ്റ്">Total Budget</div>
+                    <div class="stat-value" id="totalBudget">₹0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label" data-en="Total Spent" data-hi="कुल खर्च" data-kn="ಒಟ್ಟು ಖರ್ಚು"
+                        data-ta="மொத்த செலவு" data-te="మొత్తం ఖర్చు" data-ml="ആകെ ചെലവ്">Total Spent</div>
+                    <div class="stat-value" id="totalSpent" style="color: var(--accent-error);">₹0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label" data-en="Remaining" data-hi="शेष" data-kn="ಉಳಿದಿದೆ" data-ta="மீதമുള്ളவை"
+                        data-te="మిగిలినది" data-ml="ബാക്കിയുള്ളത്">Remaining</div>
+                    <div class="stat-value" id="remainingBudget" style="color: var(--primary-green);">₹0</div>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--spacing-md);">
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px;">
+                    <span data-en="Budget Utilization" data-hi="बजट उपयोग" data-kn="ಬಜೆಟ್ ಬಳಕೆ"
+                        data-ta="பட்ஜெட் பயன்பாடு" data-te="బడ్జెట్ వినియోగం" data-ml="ബജറ്റ് വിനിയോഗം">Budget
+                        Utilization</span>
+                    <span id="utilizationText">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="budgetProgress" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-2">
+            <div class="summary-card">
+                <h3 style="margin-bottom: var(--spacing-md);" data-en="Expenses by Category"
+                    data-hi="श्रेणी के अनुसार खर्च" data-kn="ವರ್ಗದ ಪ್ರಕಾರ ವೆಚ್ಚಗಳು" data-ta="வகை வாரியாக செலவுகள்"
+                    data-te="వర్గం వారీగా ఖర్చులు" data-ml="വിഭാഗം തിരിച്ചുള്ള ചെലവുകൾ">Expenses by Category</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="summary-card">
+                <h3 style="margin-bottom: var(--spacing-md);" data-en="Daily Spending Trend"
+                    data-hi="दैनिक खर्च की प्रवृत्ति" data-kn="ದೈನಂದಿನ ಖರ್ಚು ಪ್ರವೃತ್ತಿ" data-ta="தினசரி செலவு போக்கு"
+                    data-te="రోజువారీ ఖర్చు ధోరణి" data-ml="ദൈനംദിന ചെലവ് പ്രവണത">Daily Spending Trend</h3>
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="summary-card">
+            <h3 style="margin-bottom: var(--spacing-md);" data-en="Recent Transactions" data-hi="हाल के लेनदेन"
+                data-kn="ಇತ್ತೀಚಿನ ವಹಿವಾಟುಗಳು" data-ta="சமீபத்திய பரிவர்த்தனைகள்" data-te="ఇటీవలి లావాదేవీలు"
+                data-ml="സമീപകാല ഇടപാടുകൾ">Recent Transactions</h3>
+            <div id="transactionsList">
+                <p style="text-align: center; color: var(--text-secondary);" data-en="Loading transactions..."
+                    data-hi="लेनदेन लोड हो रहा है..." data-kn="ವಹಿವಾಟುಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+                    data-ta="பரிவர்த்தனைகளை ஏற்றுகிறது..." data-te="లావాదేవీలను లోడ్ చేస్తోంది..."
+                    data-ml="ഇടപാടുകൾ ലോഡുചെയ്യുന്നു...">Loading transactions...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadSummary);
+
+        document.getElementById('setBudgetBtn').addEventListener('click', () => {
+            const div = document.getElementById('budgetInputDiv');
+            div.style.display = div.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('saveBudgetBtn').addEventListener('click', async () => {
+            const amount = document.getElementById('newBudget').value;
+            if (!amount) return;
+
+            try {
+                const response = await fetch('/set-budget', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ budget: amount })
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showNotification('Budget updated!', 'success');
+                    loadSummary();
+                    document.getElementById('budgetInputDiv').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        async function loadSummary() {
+            try {
+                const response = await fetch('/get-summary');
+                const data = await response.json();
+
+                // Update Stats
+                document.getElementById('totalBudget').textContent = `₹${data.budget}`;
+                document.getElementById('totalSpent').textContent = `₹${data.total_spent}`;
+                document.getElementById('remainingBudget').textContent = `₹${data.remaining}`;
+
+                // Update Progress
+                const utilization = data.budget > 0 ? (data.total_spent / data.budget) * 100 : 0;
+                document.getElementById('budgetProgress').style.width = `${Math.min(utilization, 100)}%`;
+                document.getElementById('utilizationText').textContent = `${utilization.toFixed(1)}%`;
+
+                if (utilization > 90) {
+                    document.getElementById('budgetProgress').style.backgroundColor = 'var(--accent-error)';
+                }
+
+                // Render Charts
+                renderCharts(data.category_breakdown);
+
+                // Render Transactions (Mock for now as API doesn't return list yet)
+                // In a real app, we'd fetch the list from backend
+                // Render Transactions (Mock for now as API doesn't return list yet)
+                // In a real app, we'd fetch the list from backend
+                document.getElementById('transactionsList').innerHTML = '<p style="text-align: center; color: var(--text-secondary);" data-en="Transaction history will appear here." data-hi="लेनदेन इतिहास यहाँ दिखाई देगा।" data-kn="ವಹಿವಾಟು ಇತಿಹಾಸ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ." data-ta="பரிவர்த்தனை வரலாறு இங்கே தோன்றும்." data-te="లావాదేవీ చరిత్ర ఇక్కడ కనిపిస్తుంది." data-ml="ഇടപാട് ചരിത്രം ഇവിടെ ദൃശ്യമാകും.">Transaction history will appear here.</p>';
+                updateLanguage();
+
+            } catch (error) {
+                console.error('Error loading summary:', error);
+            }
+        }
+
+        let categoryChartInstance = null;
+
+        function renderCharts(categoryData) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+
+            if (categoryChartInstance) {
+                categoryChartInstance.destroy();
+            }
+
+            const labels = Object.keys(categoryData);
+            const values = Object.values(categoryData);
+
+            categoryChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            '#4CAF50', '#FFC107', '#2196F3', '#F44336', '#9C27B0', '#00BCD4'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#fff' }
+                        }
+                    }
+                }
+            });
+
+            // Placeholder for trend chart
+            const ctx2 = document.getElementById('trendChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Daily Spending',
+                        data: [1200, 1900, 300, 500, 200, 3000, 1500], // Mock data
+                        borderColor: '#FFC107',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#aaa' } },
+                        x: { grid: { display: false }, ticks: { color: '#aaa' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

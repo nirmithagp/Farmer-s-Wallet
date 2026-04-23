@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AI-powered loan and subsidy recommendations for farmers based on crop type, land, and income">
+    <title>Loan Recommendations - Farmers Wallet</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: var(--spacing-xl) auto;
+            padding: var(--spacing-xl);
+        }
+
+        .results-container {
+            margin-top: var(--spacing-xl);
+        }
+
+        .recommendation-card {
+            background: var(--gradient-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            transition: all var(--transition-base);
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .recommendation-card.best {
+            border: 2px solid var(--primary-green);
+            box-shadow: 0 0 20px var(--primary-green-glow);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .badge-best {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .badge-alternative {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: var(--spacing-sm);
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 0.6s ease;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .spinner {
+            border: 4px solid var(--bg-tertiary);
+            border-top: 4px solid var(--primary-green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-logo">
+                    <span class="nav-logo-icon">🌾</span>
+                    <span>Farmers Wallet</span>
+                </a>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/financial-advice" class="nav-link">Financial Advice</a></li>
+                    <li><a href="/expense-form" class="nav-link">Expense Tracking</a></li>
+                    <li><a href="/price-form" class="nav-link">Price Forecast</a></li>
+                    <li><a href="/loan-recommendations" class="nav-link">Loan Recommendations</a></li>
+                    <li class="lang-selector">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">English</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </li>
+                </ul>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container form-container">
+        <h1 class="text-center"
+            style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: var(--spacing-md);"
+            data-en="Loan & Subsidy Recommendations" data-hi="ऋण और सब्सिडी सिफारिशें"
+            data-kn="ಸಾಲ ಮತ್ತು ಸಬ್ಸಿಡಿ ಶಿಫಾರಸುಗಳು" data-ta="கடன் & மானியம் பரிந்துரைகள்"
+            data-te="రుణం & సబ్సిడీ సిఫార్సులు" data-ml="വായ്പയും സബ്സിഡി ശുപാർശകളും">
+            <i class="fas fa-hand-holding-usd"></i> Loan & Subsidy Recommendations
+        </h1>
+        <p class="text-center" style="color: var(--text-secondary); margin-bottom: var(--spacing-xl);"
+            data-en="Get personalized loan recommendations based on your farming details"
+            data-hi="अपने कृषि विवरण के आधार पर व्यक्तिगत ऋण सिफारिशें प्राप्त करें"
+            data-kn="ನಿಮ್ಮ ಕೃಷಿ ವಿವರಗಳ ಆಧಾರದ ಮೇಲೆ ವೈಯಕ್ತಿಕ ಸಾಲ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ"
+            data-ta="உங்கள் விவசாய விவரங்களின் அடிப்படையில் தனிப்பயனாக்கப்பட்ட கடன் பரிந்துரைகளைப் பெறுங்கள்"
+            data-te="మీ వ్యవసాయ వివరాల ఆధారంగా వ్యక్తిగతీకరించిన రుణ సిఫార్సులను పొందండి"
+            data-ml="നിങ്ങളുടെ കാർഷിക വിവരങ്ങൾ അടിസ്ഥാനമാക്കി വ്യക്തിഗത വായ്പാ ശുപാർശകൾ നേടുക">
+            Get personalized loan recommendations based on your farming details
+        </p>
+
+        <!-- Form -->
+        <div class="card">
+            <div class="card-content">
+                <form id="loanForm">
+                    <div class="form-group">
+                        <label class="form-label" for="cropType" data-en="Crop Type" data-hi="फसल का प्रकार"
+                            data-kn="ಬೆಳೆ ಪ್ರಕಾರ" data-ta="பயிர் வகை" data-te="పంట రకం" data-ml="വിള തരം">
+                            <i class="fas fa-seedling"></i> Crop Type
+                        </label>
+                        <select class="form-select" id="cropType" required>
+                            <option value="">Select Crop Type</option>
+                            <option value="Rice">Rice</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="Sugarcane">Sugarcane</option>
+                            <option value="Cotton">Cotton</option>
+                            <option value="Millets">Millets</option>
+                            <option value="Pulses">Pulses</option>
+                            <option value="Groundnut">Groundnut</option>
+                            <option value="Maize">Maize</option>
+                            <option value="Coffee">Coffee</option>
+                            <option value="Tea">Tea</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="landType" data-en="Land Type" data-hi="भूमि का प्रकार"
+                            data-kn="ಭೂಮಿ ಪ್ರಕಾರ" data-ta="நில வகை" data-te="భూమి రకం" data-ml="ഭൂമി തരം">
+                            <i class="fas fa-mountain"></i> Land Type
+                        </label>
+                        <select class="form-select" id="landType" required>
+                            <option value="">Select Land Type</option>
+                            <option value="Irrigated">Irrigated</option>
+                            <option value="Dryland">Dryland</option>
+                            <option value="Rainfed">Rainfed</option>
+                            <option value="Wetland">Wetland</option>
+                            <option value="Black cotton soil land">Black Cotton Soil</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="location" data-en="Location (District)" data-hi="स्थान (जिला)"
+                            data-kn="ಸ್ಥಳ (ಜಿಲ್ಲೆ)" data-ta="இடம் (மாவட்டம்)" data-te="స్థానం (జిల్లా)"
+                            data-ml="സ്ഥലം (ജില്ല)">
+                            <i class="fas fa-map-marker-alt"></i> Location (District)
+                        </label>
+                        <input type="text" class="form-input" id="location" placeholder="Enter your district"
+                            data-en="Enter your district" data-hi="अपना जिला दर्ज करें"
+                            data-kn="ನಿಮ್ಮ ಜಿಲ್ಲೆಯನ್ನು ನಮೂದಿಸಿ" data-ta="உங்கள் மாவட்டத்தை உள்ளிடவும்"
+                            data-te="మీ జిల్లాను నమోదు చేయండి" data-ml="നിങ്ങളുടെ ജില്ല നൽകുക" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="landSize" data-en="Land Size (acres)"
+                            data-hi="भूमि का आकार (एकड़)" data-kn="ಭೂಮಿ ಗಾತ್ರ (ಎಕರೆ)" data-ta="நில அளவு (ஏக்கர்)"
+                            data-te="భూమి పరిమాణం (ఎకరాలు)" data-ml="ഭൂമി വലിപ്പം (ഏക്കർ)">
+                            <i class="fas fa-ruler-combined"></i> Land Size (acres)
+                        </label>
+                        <input type="number" class="form-input" id="landSize" placeholder="Enter land size"
+                            data-en="Enter land size" data-hi="भूमि का आकार दर्ज करें" data-kn="ಭೂಮಿ ಗಾತ್ರವನ್ನು ನಮೂದಿಸಿ"
+                            data-ta="நில அளவை உள்ளிடவும்" data-te="భూమి పరిమాణాన్ని నమోదు చేయండి"
+                            data-ml="ഭൂമി വലിപ്പം നൽകുക" step="0.1" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="income" data-en="Annual Income (₹)" data-hi="वार्षिक आय (₹)"
+                            data-kn="ವಾರ್ಷಿಕ ಆದಾಯ (₹)" data-ta="ஆண்டு வருமானம் (₹)" data-te="వార్షిక ఆదాయం (₹)"
+                            data-ml="വാർഷിക വരുമാനം (₹)">
+                            <i class="fas fa-rupee-sign"></i> Annual Income (₹)
+                        </label>
+                        <input type="number" class="form-input" id="income" placeholder="Enter annual income"
+                            data-en="Enter annual income" data-hi="वार्षिक आय दर्ज करें"
+                            data-kn="ವಾರ್ಷಿಕ ಆದಾಯವನ್ನು ನಮೂದಿಸಿ" data-ta="ஆண்டு வருமானத்தை உள்ளிடவும்"
+                            data-te="వార్షిక ఆదాయాన్ని నమోదు చేయండి" data-ml="വാർഷിക വരുമാനം നൽകുക" min="0" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-search"></i> <span data-en="Get Recommendations"
+                            data-hi="सिफारिशें प्राप्त करें" data-kn="ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ"
+                            data-ta="பரிந்துரைகளைப் பெறுங்கள்" data-te="సిఫార్సులను పొందండి"
+                            data-ml="ശുപാർശകൾ നേടുക">Get Recommendations</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="results-container" style="display: none;">
+            <h2 class="text-center" style="margin-bottom: var(--spacing-lg);">
+                <i class="fas fa-star"></i> <span data-en="Recommended Loans" data-hi="अनुशंसित ऋण"
+                    data-kn="ಶಿಫಾರಸು ಮಾಡಲಾದ ಸಾಲಗಳು" data-ta="பரிந்துரைக்கப்பட்ட கடன்கள்"
+                    data-te="సిఫార్సు చేయబడిన రుణాలు" data-ml="ശുപാർശ ചെയ്ത വായ്പകൾ">Recommended Loans</span>
+            </h2>
+            <div id="recommendationsList"></div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p style="margin-top: var(--spacing-md); color: var(--text-secondary);" data-en="Analyzing your details..."
+                data-hi="आपके विवरण का विश्लेषण किया जा रहा है..." data-kn="ನಿಮ್ಮ ವಿವರಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ..."
+                data-ta="உங்கள் விவரங்களை பகுப்பாய்வு செய்கிறது..." data-te="మీ వివరాలను విశ్లేషిస్తోంది..."
+                data-ml="നിങ്ങളുടെ വിവരങ്ങൾ വിശകലനം ചെയ്യുന്നു...">Analyzing your details...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('loanForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                crop_type: document.getElementById('cropType').value,
+                land_type: document.getElementById('landType').value,
+                location: document.getElementById('location').value,
+                land_size: document.getElementById('landSize').value,
+                income: document.getElementById('income').value
+            };
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            try {
+                const response = await fetch('/get-loan-recommendations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showNotification(data.error, 'error');
+                    return;
+                }
+
+                displayRecommendations(data.recommendations);
+
+            } catch (error) {
+                showNotification('Error fetching recommendations', 'error');
+                console.error(error);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('recommendationsList');
+            container.innerHTML = '';
+
+            recommendations.forEach((rec, index) => {
+                const isBest = index === 0;
+                const card = document.createElement('div');
+                card.className = `recommendation-card ${isBest ? 'best' : ''}`;
+
+                const confidence = parseFloat(rec.confidence);
+
+                card.innerHTML = `
+                    <div class="badge ${isBest ? 'badge-best' : 'badge-alternative'}">
+                        ${isBest ? '<span data-en="🥇 Best Recommendation" data-hi="🥇 सर्वश्रेष्ठ सिफारिश" data-kn="🥇 ಅತ್ಯುತ್ತಮ ಶಿಫಾರಸು" data-ta="🥇 சிறந்த பரிந்துரை" data-te="🥇 ఉత్తమ సిఫార్సు" data-ml="🥇 മികച്ച ശുപാർശ">🥇 Best Recommendation</span>' : `<span data-en="🥈 Alternative ${index}" data-hi="🥈 विकल्प ${index}" data-kn="🥈 ಪರ್ಯಾಯ ${index}" data-ta="🥈 மாற்று ${index}" data-te="🥈 ప్రత్యామ్నాయం ${index}" data-ml="🥈 ബദൽ ${index}">🥈 Alternative ${index}</span>`}
+                    </div>
+                    <h3 style="margin-bottom: var(--spacing-sm); color: var(--primary-green);">
+                        ${rec.loan_name}
+                    </h3>
+                    ${rec.description ? `<p style="color: var(--text-secondary); margin-bottom: var(--spacing-sm);">${rec.description}</p>` : ''}
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                        <span style="color: var(--text-secondary);" data-en="Confidence Score" data-hi="विश्वास स्कोर" data-kn="ಆತ್ಮವಿಶ್ವಾಸ ಸ್ಕೋರ್" data-ta="நம்பிக்கை மதிப்பெண்" data-te="కాన్ఫిడెన్స్ స్కోర్" data-ml="കോൺഫിഡൻസ് സ്കോർ">Confidence Score</span>
+                        <span style="color: var(--primary-green); font-weight: 600;">${rec.confidence}</span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: ${confidence}%"></div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            updateLanguage();
+        }
+    </script>
+</body>
+
+</html>

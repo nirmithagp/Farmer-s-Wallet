@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracking - Farmers Wallet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .expense-container {
+            max-width: 900px;
+            margin: var(--spacing-xl) auto;
+        }
+
+        .expense-list {
+            margin-top: var(--spacing-lg);
+        }
+
+        .expense-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .expense-amount {
+            font-weight: bold;
+            color: var(--accent-error);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-logo"><span class="nav-logo-icon">🌾</span>Farmers Wallet</a>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/financial-advice" class="nav-link">Financial Advice</a></li>
+                    <li><a href="/expense-form" class="nav-link active">Expense Tracking</a></li>
+                    <li><a href="/price-form" class="nav-link">Price Forecast</a></li>
+                    <li><a href="/loan-recommendations" class="nav-link">Loan Recommendations</a></li>
+                    <li class="lang-selector">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">English</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </li>
+                </ul>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container expense-container">
+        <div class="text-center mb-lg">
+            <h1 class="hero-title" style="font-size:2.5rem;" data-en="Expense Tracking" data-hi="व्यय ट्रैकिंग"
+                data-kn="ವೆಚ್ಚ ಟ್ರ್ಯಾಕಿಂಗ್" data-ta="செலவு கண்காணிப்பு" data-te="ఖర్చు ట్రాకింగ్"
+                data-ml="ചെലവ് ട്രാക്കിംഗ്">Expense Tracking</h1>
+            <p class="hero-subtitle" style="font-size:1.1rem;" data-en="Keep track of your daily farming expenses"
+                data-hi="अपने दैनिक कृषि खर्चों पर नज़र रखें" data-kn="ನಿಮ್ಮ ದೈನಂದಿನ ಕೃಷಿ ವೆಚ್ಚಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ"
+                data-ta="உங்கள் தினசரி விவசாய செலவுகளைக் கண்காணிக்கவும்"
+                data-te="మీ రోజువారీ వ్యవసాయ ఖర్చులను ట్రాక్ చేయండి"
+                data-ml="നിങ്ങളുടെ ദൈനംദിന കാർഷിക ചെലവുകൾ ട്രാക്കുചെയ്യുക">Keep track of your daily farming expenses</p>
+        </div>
+
+        <div class="grid grid-2">
+            <!-- Add Expense Form -->
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title" data-en="Add New Expense" data-hi="नया खर्च जोड़ें"
+                        data-kn="ಹೊಸ ವೆಚ್ಚವನ್ನು ಸೇರಿಸಿ" data-ta="புதிய செலவைச் சேர்க்கவும்"
+                        data-te="కొత్త ఖర్చును జోడించండి" data-ml="പുതിയ ചെലവ് ചേർക്കുക"><i
+                            class="fas fa-plus-circle"></i> Add New Expense</h3>
+                    <form id="addExpenseForm">
+                        <div class="form-group">
+                            <label class="form-label" data-en="Expense Name" data-hi="खर्च का नाम"
+                                data-kn="ವೆಚ್ಚದ ಹೆಸರು" data-ta="செலவு பெயர்" data-te="ఖర్చు పేరు"
+                                data-ml="ചെലവിന്റെ പേര്">Expense Name</label>
+                            <input type="text" id="expenseName" class="form-input"
+                                placeholder="e.g. Fertilizer Purchase" data-en="e.g. Fertilizer Purchase"
+                                data-hi="जैसे उर्वरक खरीद" data-kn="ಉದಾ. ರಸಗೊಬ್ಬರ ಖರೀದಿ" data-ta="எ.கா. உரம் கொள்முதல்"
+                                data-te="ఉదా. ఎరువుల కొనుగోలు" data-ml="ഉദാ. വളം വാങ്ങൽ" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-en="Category" data-hi="श्रेणी" data-kn="ವರ್ಗ" data-ta="வகை"
+                                data-te="వర్గం" data-ml="വിഭാഗം">Category</label>
+                            <select id="expenseCategory" class="form-select" required>
+                                {% for category in categories %}
+                                <option value="{{ category }}">{{ category }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-en="Amount (₹)" data-hi="राशि (₹)" data-kn="ಮೊತ್ತ (₹)"
+                                data-ta="தொகை (₹)" data-te="మొత్తం (₹)" data-ml="തുക (₹)">Amount (₹)</label>
+                            <input type="number" id="expenseAmount" class="form-input" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-en="Date" data-hi="तारीख" data-kn="ದಿನಾಂಕ" data-ta="தேதி"
+                                data-te="తేదీ" data-ml="തീയതി">Date</label>
+                            <input type="date" id="expenseDate" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;" data-en="Add Expense"
+                            data-hi="खर्च जोड़ें" data-kn="ವೆಚ್ಚವನ್ನು ಸೇರಿಸಿ" data-ta="செலவைச் சேர்க்கவும்"
+                            data-te="ఖర్చును జోడించండి" data-ml="ചെലവ് ചേർക്കുക">Add Expense</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Actions & Summary Link -->
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title" data-en="Budget & Reports" data-hi="बजट और रिपोर्ट"
+                        data-kn="ಬಜೆಟ್ ಮತ್ತು ವರದಿಗಳು" data-ta="பட்ஜெட் & அறிக்கைகள்" data-te="బడ్జెట్ & నివేదికలు"
+                        data-ml="ബജറ്റും റിപ്പോർട്ടുകളും"><i class="fas fa-wallet"></i> Budget & Reports</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);"
+                        data-en="View detailed reports of your spending habits and manage your monthly budget."
+                        data-hi="अपनी खर्च करने की आदतों की विस्तृत रिपोर्ट देखें और अपने मासिक बजट का प्रबंधन करें।"
+                        data-kn="ನಿಮ್ಮ ಖರ್ಚು ಅಭ್ಯಾಸಗಳ ವಿವರವಾದ ವರದಿಗಳನ್ನು ವೀಕ್ಷಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಮಾಸಿಕ ಬಜೆಟ್ ಅನ್ನು ನಿರ್ವಹಿಸಿ."
+                        data-ta="உங்கள் செலவு பழக்கவழக்கங்களின் விரிவான அறிக்கைகளைப் பார்க்கவும் மற்றும் உங்கள் மாதாந்திர பட்ஜெட்டை நிர்வகிக்கவும்."
+                        data-te="మీ ఖర్చు అలవాట్ల వివరణాత్మక నివేదికలను వీక్షించండి మరియు మీ నెలవారీ బడ్జెట్‌ను నిర్వహించండి."
+                        data-ml="നിങ്ങളുടെ ചെലവ് ശീലങ്ങളുടെ വിശദമായ റിപ്പോർട്ടുകൾ കാണുകയും നിങ്ങളുടെ പ്രതിമാസ ബജറ്റ് നിയന്ത്രിക്കുകയും ചെയ്യുക.">
+                        View detailed reports of your spending habits and manage your monthly budget.</p>
+
+                    <a href="/budget-summary-page" class="btn btn-secondary"
+                        style="width:100%; margin-bottom: var(--spacing-md); text-align: center;">
+                        <i class="fas fa-chart-pie"></i> <span data-en="View Budget Summary" data-hi="बजट सारांश देखें"
+                            data-kn="ಬಜೆಟ್ ಸಾರಾಂಶವನ್ನು ವೀಕ್ಷಿಸಿ" data-ta="பட்ஜெட் சுருக்கத்தைப் பார்க்கவும்"
+                            data-te="బడ్జెట్ సారాంశాన్ని వీక్షించండి" data-ml="ബജറ്റ് സംഗ്രഹം കാണുക">View Budget
+                            Summary</span>
+                    </a>
+
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: var(--spacing-md) 0;">
+
+                    <h4 style="color: var(--primary-gold); margin-bottom: var(--spacing-sm);" data-en="Add New Category"
+                        data-hi="नई श्रेणी जोड़ें" data-kn="ಹೊಸ ವರ್ಗವನ್ನು ಸೇರಿಸಿ" data-ta="புதிய வகையைச் சேர்க்கவும்"
+                        data-te="కొత్త వర్గాన్ని జోడించండి" data-ml="പുതിയ വിഭാഗം ചേർക്കുക">Add New Category</h4>
+                    <div class="form-group" style="display: flex; gap: var(--spacing-sm);">
+                        <input type="text" id="newCategory" class="form-input" placeholder="New Category Name"
+                            data-en="New Category Name" data-hi="नई श्रेणी का नाम" data-kn="ಹೊಸ ವರ್ಗದ ಹೆಸರು"
+                            data-ta="புதிய வகை பெயர்" data-te="కొత్త వర్గం పేరు" data-ml="പുതിയ വിഭാഗത്തിന്റെ പേര്">
+                        <button id="addCategoryBtn" class="btn btn-outline"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Set default date to today
+        document.getElementById('expenseDate').valueAsDate = new Date();
+
+        // Handle Add Expense
+        document.getElementById('addExpenseForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const data = {
+                name: document.getElementById('expenseName').value,
+                category: document.getElementById('expenseCategory').value,
+                amount: document.getElementById('expenseAmount').value,
+                date: document.getElementById('expenseDate').value
+            };
+
+            try {
+                const response = await fetch('/add-expense', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showNotification('Expense added successfully!', 'success');
+                    document.getElementById('addExpenseForm').reset();
+                    document.getElementById('expenseDate').valueAsDate = new Date();
+                } else {
+                    showNotification('Error adding expense', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to connect to server', 'error');
+            }
+        });
+
+        // Handle Add Category
+        document.getElementById('addCategoryBtn').addEventListener('click', async function () {
+            const category = document.getElementById('newCategory').value;
+            if (!category) return;
+
+            try {
+                const response = await fetch('/add-category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category: category })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showNotification('Category added!', 'success');
+                    // Add to dropdown
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.text = category;
+                    document.getElementById('expenseCategory').add(option);
+                    document.getElementById('newCategory').value = '';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>
